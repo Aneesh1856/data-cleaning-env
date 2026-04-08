@@ -1,0 +1,11 @@
+__pycache__/
+*.py[cod]
+*.pyo
+.env
+*.csv
+!env/data/
+env/data/temp_out_*.csv
+*.log
+.DS_Store
+test_api.py
+test_groq.py

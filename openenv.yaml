@@ -1,0 +1,31 @@
+name: data-cleaning-env
+version: "1.0"
+description: "Agent iteratively cleans a dirty CSV toward a ground-truth schema using pandas operations."
+author: ""
+tasks:
+  - id: easy
+    description: "fix date formats"
+    difficulty: easy
+    max_steps: 20
+  - id: medium
+    description: "dedup + normalize"
+    difficulty: medium
+    max_steps: 35
+  - id: hard
+    description: "impute + validate schema"
+    difficulty: hard
+    max_steps: 60
+action_space:
+  - fix_dates
+  - drop_duplicates
+  - normalize_category
+  - impute_nulls
+  - rename_column
+  - drop_column
+  - done
+observation_space:
+  dirty_csv: str
+  schema: dict
+  task_description: str
+  step_count: int
+  issues_remaining: int
