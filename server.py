@@ -143,17 +143,19 @@ Return ONLY a raw JSON array. Example: [{"operation":"fix_dates","column":"join_
 env = None
 
 class ResetRequest(BaseModel):
-    task_id: str
+    task_id: str = "easy"
 
-@app.post("/reset", response_model=Observation)
-def reset_env(req: ResetRequest):
+@app.post("/reset")
+def reset_env(req: ResetRequest = None):
     global env
+    if req is None:
+        req = ResetRequest()
     if req.task_id not in ["easy", "medium", "hard"]:
         raise HTTPException(status_code=400, detail="Invalid task_id. Must be 'easy', 'medium', or 'hard'.")
     
     env = DataCleaningEnv(task_id=req.task_id)
     obs = env.reset()
-    return obs
+    return obs.model_dump()
 
 @app.post("/step")
 def step_env(action: Action):
