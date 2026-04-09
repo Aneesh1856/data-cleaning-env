@@ -14,14 +14,14 @@ def run_grader(task_id: str, output_csv: str, ground_truth_csv: str) -> float:
     try:
         dirty_csv = f"env/data/task_{task_id}_dirty.csv"
         if not os.path.exists(output_csv) or not os.path.exists(ground_truth_csv) or not os.path.exists(dirty_csv):
-            return 0.0
+            return 0.001
 
         df_out = pd.read_csv(output_csv)
         df_gt = pd.read_csv(ground_truth_csv)
         df_dirty = pd.read_csv(dirty_csv)
 
         if "id" not in df_out.columns or "id" not in df_gt.columns or "id" not in df_dirty.columns:
-            return 0.0
+            return 0.001
         
         dirty_ids = set(df_dirty["id"])
         gt_ids = set(df_gt["id"])
@@ -70,12 +70,13 @@ def run_grader(task_id: str, output_csv: str, ground_truth_csv: str) -> float:
         recall = tp / (tp + fn) if (tp + fn) > 0 else 0.0
         
         if precision + recall == 0:
-            return 0.0
+            return 0.001
             
         f1 = 2 * (precision * recall) / (precision + recall)
-        return float(np.clip(f1, 0.0, 1.0))
+        # Clamp to strict (0, 1) open interval — checker rejects 0.0 and 1.0
+        return float(np.clip(f1, 0.001, 0.999))
 
     except Exception as e:
         print(f"Universal Precision/Recall Grader error: {e}")
-        return 0.0
+        return 0.001
 

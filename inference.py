@@ -47,7 +47,7 @@ Rules:
             resp.raise_for_status()
             obs = resp.json()
         except Exception as e:
-            print(f"[END] task={task_id} score=0.0 steps=0", flush=True)
+            print(f"[END] task={task_id} score=0.001 steps=0", flush=True)
             continue
 
         max_steps = {"easy": 20, "medium": 35, "hard": 60}[task_id]
@@ -126,6 +126,8 @@ Rules:
                 else:
                     final_score = max(reward_value, 0.0)
 
+        # Clamp score to strict (0, 1) open interval
+        final_score = max(0.001, min(0.999, final_score))
         print(f"[END] task={task_id} score={final_score} steps={step_count}", flush=True)
 
 if __name__ == "__main__":
